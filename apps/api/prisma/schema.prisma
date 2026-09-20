@@ -1,0 +1,343 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SystemRole {
+  USER
+  ADMIN
+}
+
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MAINTAINER
+  DEVELOPER
+  VIEWER
+}
+
+enum AgentTaskStatus {
+  QUEUED
+  RUNNING
+  WAITING_FOR_REVIEW
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum ToolCallStatus {
+  SUCCESS
+  ERROR
+}
+
+enum TerminalStatus {
+  RUNNING
+  EXITED
+  KILLED
+  TIMEOUT
+  ERROR
+}
+
+enum ChangeStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model User {
+  id                    String                   @id @default(uuid())
+  email                 String                   @unique
+  name                  String?
+  passwordHash          String
+  role                  SystemRole               @default(USER)
+  emailVerifiedAt       DateTime?
+  settings              Json                     @default("{}")
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  sessions              Session[]
+  workspaces            Workspace[]              @relation("WorkspaceOwner")
+  memberships           WorkspaceMember[]
+  conversations         Conversation[]
+  messages              Message[]
+  agentTasks            AgentTask[]
+  terminalSessions      TerminalSession[]
+  apiKeys               ApiKey[]
+  subscriptions         Subscription[]
+  auditLogs             AuditLog[]
+  aiUsageLogs           AIUsageLog[]
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens   PasswordResetToken[]
+}
+
+model Workspace {
+  id               String             @id @default(uuid())
+  name             String
+  slug             String
+  rootPath         String
+  ownerId          String
+  owner            User               @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  projects         Project[]
+  files            File[]
+  folders          Folder[]
+  members          WorkspaceMember[]
+  conversations    Conversation[]
+  agentTasks       AgentTask[]
+  terminalSessions TerminalSession[]
+  gitRepository    GitRepository?
+  auditLogs        AuditLog[]
+  aiUsageLogs      AIUsageLog[]
+  changeHistory    ChangeHistory[]
+  pendingChanges   PendingChange[]
+
+  @@unique([ownerId, slug])
+}
+
+model WorkspaceMember {
+  id          String        @id @default(uuid())
+  userId      String
+  workspaceId String
+  role        WorkspaceRole @default(DEVELOPER)
+  createdAt   DateTime      @default(now())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+model Project {
+  id           String    @id @default(uuid())
+  workspaceId  String
+  name         String
+  template     String?
+  framework    String?
+  rootPath     String    @default("")
+  startCommand String?
+  env          Json      @default("{}")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model File {
+  id          String    @id @default(uuid())
+  workspaceId String
+  path        String
+  hash        String?
+  size        Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, path])
+}
+
+model Folder {
+  id          String    @id @default(uuid())
+  workspaceId String
+  path        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, path])
+}
+
+model Session {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  userAgent String?
+  ip        String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id          String    @id @default(uuid())
+  userId      String
+  workspaceId String?
+  title       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  messages    Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  userId         String?
+  role           String
+  content        String
+  metadata       Json         @default("{}")
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model AgentTask {
+  id          String          @id @default(uuid())
+  userId      String
+  workspaceId String
+  request     String
+  status      AgentTaskStatus @default(QUEUED)
+  plan        String?
+  result      String?
+  error       String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  completedAt DateTime?
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  toolCalls   AgentToolCall[]
+  pendingChanges PendingChange[]
+}
+
+model AgentToolCall {
+  id          String         @id @default(uuid())
+  taskId      String
+  name        String
+  input       Json
+  output      Json?
+  status      ToolCallStatus
+  durationMs  Int
+  error       String?
+  createdAt   DateTime       @default(now())
+  task        AgentTask       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model PendingChange {
+  id          String       @id @default(uuid())
+  taskId      String?
+  workspaceId String
+  path        String
+  kind        String
+  oldContent  String
+  newContent  String
+  diff        String
+  status      ChangeStatus  @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  task        AgentTask?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  workspace   Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model TerminalSession {
+  id          String         @id @default(uuid())
+  userId      String
+  workspaceId String
+  command     String
+  cwd         String         @default("")
+  status      TerminalStatus @default(RUNNING)
+  outputTail  String         @default("")
+  exitCode    Int?
+  startedAt   DateTime       @default(now())
+  endedAt     DateTime?
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model GitRepository {
+  id          String    @id @default(uuid())
+  workspaceId String    @unique
+  remoteUrl   String?
+  defaultBranch String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id           String   @id @default(uuid())
+  userId       String
+  name         String
+  kind         String
+  encryptedKey String
+  iv           String
+  authTag      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastUsedAt   DateTime?
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  plan      String   @default("free")
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  userId      String?
+  workspaceId String?
+  action      String
+  resource    String?
+  metadata    Json      @default("{}")
+  ip          String?
+  createdAt   DateTime  @default(now())
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model ChangeHistory {
+  id          String    @id @default(uuid())
+  workspaceId String
+  userId      String?
+  path        String
+  oldContent  String?
+  newContent  String?
+  diff        String?
+  action      String
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model AIUsageLog {
+  id           String    @id @default(uuid())
+  requestId    String    @unique
+  userId       String
+  workspaceId  String?
+  model        String
+  inputTokens  Int?
+  outputTokens Int?
+  totalTokens  Int?
+  durationMs   Int
+  status       String
+  createdAt    DateTime  @default(now())
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace    Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}

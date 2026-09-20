@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build outputs
+dist/
+.next/
+out/
+build/
+coverage/
+.turbo/
+
+# local env and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# runtime workspaces and logs
+.workspaces/
+logs/
+*.log
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# TypeScript
+*.tsbuildinfo

@@ -1,0 +1,37 @@
+{
+  "name": "aeta",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Aeta - browser Web IDE with a DeepSeek-powered AI coding agent.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev -w @aeta/api\" \"npm run dev -w @aeta/web\"",
+    "dev:api": "npm run dev -w @aeta/api",
+    "dev:web": "npm run dev -w @aeta/web",
+    "build": "npm run build -ws --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "npm run lint -ws --if-present",
+    "typecheck": "npm run typecheck -ws --if-present",
+    "prisma:generate": "npm run prisma:generate -w @aeta/api",
+    "prisma:migrate": "npm run prisma:migrate -w @aeta/api"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/pg": "^8.23.1",
+    "concurrently": "^9.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
+  }
+}
