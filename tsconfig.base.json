@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@aeta/shared": ["packages/shared/src/index.ts"],
+      "@aeta/filesystem": ["packages/filesystem/src/index.ts"],
+      "@aeta/terminal": ["packages/terminal/src/index.ts"],
+      "@aeta/git": ["packages/git/src/index.ts"],
+      "@aeta/ai": ["packages/ai/src/index.ts"],
+      "@aeta/agent": ["packages/agent/src/index.ts"]
+    }
+  }
+}
