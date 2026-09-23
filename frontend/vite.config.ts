@@ -1,2 +1,2 @@
 import {defineConfig} from 'vite';import react from '@vitejs/plugin-react';
-export default defineConfig({plugins:[react()],server:{host:'0.0.0.0',allowedHosts:true,proxy:{'/api':{target:'http://localhost:4000',changeOrigin:true}}},build:{sourcemap:false}});
+export default defineConfig({plugins:[react()],server:{host:'0.0.0.0',allowedHosts:true,proxy:{'/api':{target:'http://localhost:4000',changeOrigin:true}}},build:{sourcemap:false,rolldownOptions:{output:{manualChunks:(id:string)=>id.includes('recharts')?'charts':id.includes('framer-motion')?'motion':id.includes('lucide-react')?'icons':undefined}}}});
