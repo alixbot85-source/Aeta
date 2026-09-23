@@ -22,3 +22,10 @@ Base URL: `/api` · JSON responses use `{ data, meta }`; errors use `{ error: { 
 - `GET /audit` — requires ADMIN role
 
 Authentication uses a 15-minute signed token in an HttpOnly, SameSite cookie. Production integration must add rotating opaque refresh tokens stored hashed in `sessions`, CSRF double-submit tokens, and token-family reuse detection.
+## USDT / TRON financial workflow
+- `POST /deposits/usdt-tron` — create authenticated request; body uses decimal string and required idempotency key.
+- `GET /admin/deposits` — FINANCE/ADMIN/SUPER_ADMIN only.
+- `POST /admin/deposits/:id/approve` — idempotent ledger credit + audit event.
+- `POST /admin/deposits/:id/reject` — reviewed rejection with required note.
+
+Current repository adapter is an in-memory **DEMO** reference implementation. Production requires the PostgreSQL adapter described in `ARCHITECTURE.md` and migration `002_usdt_tron_financial_controls.sql`.

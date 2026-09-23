@@ -18,3 +18,5 @@ MarketDataProvider, PaymentProvider, CustodyProvider and OrderExecutionProvider 
 
 ## Security
 Argon2id/bcrypt password hashes, encrypted KYC fields, private file storage, RBAC, rate limiting, secure cookies, CSP/Helmet, validation, parameterized SQL, 2FA challenge for withdrawals, session revocation, alerts and immutable audit export are required. Production keys belong in a secrets manager.
+## Current product scope: USDT / TRON
+The user-facing financial scope is USDT on TRON (TRC20); TRX exists only as a network-fee/trading simulation asset. `FinancialLedger` is the tested demo domain service. It validates decimal strings, enforces idempotency, creates immutable entries, and audits approvals. The production repository must execute the same transition under a PostgreSQL SERIALIZABLE transaction and unique idempotency/TXID constraints. Private keys must be held by a custody/KMS adapter and never stored plaintext.
