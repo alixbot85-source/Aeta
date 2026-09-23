@@ -13,3 +13,6 @@ No component that calls CoinGecko or another guessed third-party provider was co
 7. **Dismissible Alert Stack** by 7ovr — interactive notification stack and read state. Source: https://21st.dev/@7ovr/components/notifications-5.
 8. **Statistics Card 7** by Sean Hello / ReUI (MIT) — grouped metric hierarchy and delta badges, adapted across user/admin stats. Source: https://21st.dev/@sean0205/components/statistics-card-7.
 9. **Glowing Card** by Ravi Katiyar — restrained glass edge treatment adapted to featured financial surfaces. Source: https://21st.dev/@ravikatiyar162/components/glowing-card.
+10. **Preloader** by shakeeb Islam — full-screen branded loading transition with Framer Motion. Source: https://21st.dev/@info-mdshakeeb/components/preloader.
+11. **Three-Card Setup Steps** by 7ovr — adapted into the first-visit guided onboarding flow. Source: https://21st.dev/@7ovr/components/onboarding-setup-steps.
+12. **Animated Menu Bar** by Ankit Verma — active expanding navigation behavior adapted into Aeta's mobile quick dock. Source: https://21st.dev/@itsankitverma/components/animated-menu-bar.
