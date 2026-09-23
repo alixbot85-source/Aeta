@@ -9,3 +9,7 @@ Components were inspected on 2026-09-24 and adapted to the existing Vite/CSS arc
 5. **Hero Section** by reuno-ui — restrained animated grid hero composition. Source: https://21st.dev/@reuno-ui/components/hero-section.
 
 No component that calls CoinGecko or another guessed third-party provider was copied as-is. Aeta preserves `NOT_CONFIGURED` in place of unverified market data. Adapted source lives in `frontend/src/components/FintechUI.tsx` and page-level compositions.
+6. **Command Palette** by Özer / interior.dev (MIT) — keyboard navigation, fuzzy section search and animated overlay. Source: https://21st.dev/@ddoemonn/components/command-palette.
+7. **Dismissible Alert Stack** by 7ovr — interactive notification stack and read state. Source: https://21st.dev/@7ovr/components/notifications-5.
+8. **Statistics Card 7** by Sean Hello / ReUI (MIT) — grouped metric hierarchy and delta badges, adapted across user/admin stats. Source: https://21st.dev/@sean0205/components/statistics-card-7.
+9. **Glowing Card** by Ravi Katiyar — restrained glass edge treatment adapted to featured financial surfaces. Source: https://21st.dev/@ravikatiyar162/components/glowing-card.
