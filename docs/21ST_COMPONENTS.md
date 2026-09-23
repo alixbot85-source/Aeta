@@ -16,3 +16,4 @@ No component that calls CoinGecko or another guessed third-party provider was co
 10. **Preloader** by shakeeb Islam — full-screen branded loading transition with Framer Motion. Source: https://21st.dev/@info-mdshakeeb/components/preloader.
 11. **Three-Card Setup Steps** by 7ovr — adapted into the first-visit guided onboarding flow. Source: https://21st.dev/@7ovr/components/onboarding-setup-steps.
 12. **Animated Menu Bar** by Ankit Verma — active expanding navigation behavior adapted into Aeta's mobile quick dock. Source: https://21st.dev/@itsankitverma/components/animated-menu-bar.
+13. **AI Chat patterns** from 21st.dev AI Chat collection — adapted model selector, context attachments, conversation layout, animated thinking state and responsive composer for Aeta AI.
