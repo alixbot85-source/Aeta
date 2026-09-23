@@ -13,5 +13,11 @@ services:
     ports: ["4000:4000"]
     depends_on:
       db: {condition: service_healthy}
+  ai:
+    build: ./ai-service
+    environment:
+      AI_ALLOWED_ORIGINS: ${APP_ORIGIN:-http://localhost:5173}
+    ports: ["8000:8000"]
+    restart: unless-stopped
 volumes:
   aeta_db:
