@@ -10,3 +10,9 @@ coverage/
 
 __pycache__/
 *.pyc
+
+# Android standalone APK build scratch
+artifacts/android/work/
+artifacts/android/signing/
+artifacts/android/*-unsigned.apk
+artifacts/android/.jdk4py/

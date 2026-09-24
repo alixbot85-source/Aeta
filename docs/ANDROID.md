@@ -56,3 +56,25 @@ Secrets, database credentials, blockchain private keys, AI provider keys and cus
 - Real market data provider: `NOT_CONFIGURED`
 - Exchange execution engine: `NOT_CONFIGURED`
 - Hosted G4F/OpenAI-compatible AI endpoint: optional and externally hosted
+
+## One-command installable APK
+
+For this Arena build I added a standalone WebView APK path that does **not** require Android Studio or a system Android SDK:
+
+```bash
+npm run android:standalone:apk
+```
+
+What it does:
+
+1. Builds the Vite frontend with relative asset paths for Android assets.
+2. Generates a minimal native WebView shell with Apktool/smali.
+3. Bootstraps a portable Java runtime via `jdk4py` automatically if `java` is not installed.
+4. Signs the APK locally with a generated debug certificate.
+5. Writes the installable file to:
+
+```text
+artifacts/android/Aeta-demo-debug.apk
+```
+
+This APK is for direct testing / sideloading. Production Play Store releases still need a persistent release keystore, signing policy, and full backend configuration.

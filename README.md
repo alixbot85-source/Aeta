@@ -51,3 +51,19 @@ npm run android:build  # requires local JDK + Android SDK
 ```
 
 For mobile/fullstack deployments set `VITE_API_URL` to the HTTPS backend URL. Do not use frontend secrets; all custody, database, AI and blockchain credentials remain backend-only.
+
+### Direct APK artifact
+
+A standalone installable Android APK can be produced without Android Studio:
+
+```bash
+npm run android:standalone:apk
+```
+
+Output:
+
+```text
+artifacts/android/Aeta-demo-debug.apk
+```
+
+The script uses Apktool + a generated smali WebView shell and signs a debug APK. It automatically downloads a portable Java runtime through `jdk4py` if no system Java exists.

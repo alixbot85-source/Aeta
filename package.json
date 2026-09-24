@@ -14,9 +14,12 @@
     "lint": "npm run typecheck",
     "android:sync": "npm run build -w @aeta/frontend && npm run cap:sync -w @aeta/frontend",
     "android:open": "npm run cap:open -w @aeta/frontend",
-    "android:build": "npm run cap:build -w @aeta/frontend"
+    "android:build": "npm run cap:build -w @aeta/frontend",
+    "android:standalone:apk": "ANDROID_APK=true npm run build -w @aeta/frontend && node scripts/build-standalone-apk.mjs"
   },
   "devDependencies": {
+    "apk_sign_ts": "^1.0.1",
+    "apktool-jar": "^2.4.1",
     "concurrently": "^9.2.1"
   }
 }
