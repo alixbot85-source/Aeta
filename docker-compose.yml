@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: aeta
+      POSTGRES_USER: aeta
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes: [aeta_db:/var/lib/postgresql/data]
+    healthcheck: {test: [CMD-SHELL, "pg_isready -U aeta"], interval: 5s, timeout: 3s, retries: 10}
+  api:
+    build: .
+    env_file: .env
+    ports: ["4000:4000"]
+    depends_on:
+      db: {condition: service_healthy}
+  ai:
+    build: ./ai-service
+    environment:
+      AI_ALLOWED_ORIGINS: ${APP_ORIGIN:-http://localhost:5173}
+    ports: ["8000:8000"]
+    restart: unless-stopped
+volumes:
+  aeta_db:
