@@ -40,3 +40,14 @@ npm test          # API tests
 - در production باید PostgreSQL، secrets قوی، TLS، object storage خصوصی، providerهای واقعی و worker queue پیکربندی شود.
 
 جزئیات در [راهنمای معماری](docs/ARCHITECTURE.md)، [API](docs/API.md) و [استقرار](docs/DEPLOYMENT.md).
+## Android app
+
+The repository now contains a Capacitor Android application in `frontend/android`.
+
+```bash
+npm run android:sync   # build Vite frontend and copy assets into Android
+npm run android:open   # open native project in Android Studio
+npm run android:build  # requires local JDK + Android SDK
+```
+
+For mobile/fullstack deployments set `VITE_API_URL` to the HTTPS backend URL. Do not use frontend secrets; all custody, database, AI and blockchain credentials remain backend-only.

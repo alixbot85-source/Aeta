@@ -7,9 +7,15 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cap:sync": "cap sync android",
+    "cap:copy": "cap copy android",
+    "cap:open": "cap open android",
+    "cap:build": "cd android && ./gradlew assembleDebug"
   },
   "dependencies": {
+    "@capacitor/android": "^7.6.9",
+    "@capacitor/core": "^7.6.9",
     "@vitejs/plugin-react": "latest",
     "framer-motion": "^13.4.2",
     "lightweight-charts": "^5.2.1",
@@ -22,6 +28,7 @@
     "vite": "latest"
   },
   "devDependencies": {
+    "@capacitor/cli": "^7.6.9",
     "@types/react": "latest",
     "@types/react-dom": "latest"
   }

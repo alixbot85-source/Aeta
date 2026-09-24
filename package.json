@@ -11,7 +11,10 @@
     "build": "npm run build -w backend && npm run build -w frontend",
     "test": "npm test -w backend",
     "typecheck": "npm run typecheck -w backend && npm run typecheck -w frontend",
-    "lint": "npm run typecheck"
+    "lint": "npm run typecheck",
+    "android:sync": "npm run build -w @aeta/frontend && npm run cap:sync -w @aeta/frontend",
+    "android:open": "npm run cap:open -w @aeta/frontend",
+    "android:build": "npm run cap:build -w @aeta/frontend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
