@@ -78,3 +78,15 @@ artifacts/android/Aeta-demo-debug.apk
 ```
 
 This APK is for direct testing / sideloading. Production Play Store releases still need a persistent release keystore, signing policy, and full backend configuration.
+
+## White-screen fix / signed full APK
+
+`Aeta-full-signed.apk` uses a different package id (`com.aeta.fintech.full`) and a local HTTPS asset bridge (`https://aeta.local/...`) inside WebView. This avoids the Android WebView blank-screen issue caused by ES module loading from `file://android_asset` on some devices.
+
+Installable artifact:
+
+```text
+artifacts/android/Aeta-full-signed.apk
+```
+
+It is locally digitally signed with a generated self-signed certificate. No Google Play key is required for sideload installation.
